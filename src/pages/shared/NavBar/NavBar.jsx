@@ -1,9 +1,12 @@
 import { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../../providers/AuthProvider";
+import { FaShoppingCart } from "react-icons/fa";
+import useCart from "../../../hooks/useCart";
 
 const NavBar = () => {
     const { user, logOut } = useContext(AuthContext);
+    const [cart] = useCart()
 
     const handleLogOut = () => {
         logOut()
@@ -17,12 +20,12 @@ const NavBar = () => {
         <li><NavLink to='/'>Home</NavLink></li>
         <li><NavLink to='/menu'>Our Menu</NavLink></li>
         <li><NavLink to='/order/salad'>Order Food</NavLink></li>
-        {
+        {/* {
             user ? <>
                 <button onClick={handleLogOut} className="btn btn-ghost">Log Out</button>
             </> :
                 <><li><NavLink to='/login'>Login</NavLink></li></>
-        }
+        } */}
     </>
 
     return (
@@ -59,9 +62,17 @@ const NavBar = () => {
             <div className="navbar-end">
                 {
                     user ? <div className="flex justify-center items-center gap-2">
-                        <a className="btn">{user.displayName}</a>
+                        {/* <a className="btn">{user.displayName}</a> */}
+                        <Link to='/dashboard/cart'>
+                            <button className="btn">
+                                <FaShoppingCart className="text-2xl" />
+                                <div className="badge badge-secondary">+{cart.length}</div>
+                            </button>
+                        </Link>
                         <img className="w-16 h-16 rounded-full" src={user.photoURL} alt="" />
-                    </div> : <a className="btn">Button</a>
+                        <button onClick={handleLogOut} className="btn btn-ghost bg-white text-black hover:text-white">Log Out</button>
+                    </div> :
+                        <button className="btn btn-primary"><NavLink to='/login'>Login</NavLink></button>
                 }
             </div>
         </div>
