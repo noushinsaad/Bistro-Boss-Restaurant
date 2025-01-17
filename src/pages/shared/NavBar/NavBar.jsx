@@ -3,9 +3,11 @@ import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../../providers/AuthProvider";
 import { FaShoppingCart } from "react-icons/fa";
 import useCart from "../../../hooks/useCart";
+import useAdmin from "../../../hooks/useAdmin";
 
 const NavBar = () => {
     const { user, logOut } = useContext(AuthContext);
+    const [isAdmin] = useAdmin();
     const [cart] = useCart()
 
     const handleLogOut = () => {
@@ -63,12 +65,14 @@ const NavBar = () => {
                 {
                     user ? <div className="flex justify-center items-center gap-2">
                         {/* <a className="btn">{user.displayName}</a> */}
-                        <Link to='/dashboard/cart'>
-                            <button className="btn">
-                                <FaShoppingCart className="text-2xl" />
-                                <div className="badge badge-secondary">+{cart.length}</div>
-                            </button>
-                        </Link>
+                        {isAdmin ?
+                            <Link to="/dashboard/adminHome"><button className="btn">Dashboard</button></Link> :
+                            <Link to='/dashboard/userHome'>
+                                <button className="btn">
+                                    <FaShoppingCart className="text-2xl" />
+                                    <div className="badge badge-secondary">+{cart.length}</div>
+                                </button>
+                            </Link>}
                         <img className="w-16 h-16 rounded-full" src={user.photoURL} alt="" />
                         <button onClick={handleLogOut} className="btn btn-ghost bg-white text-black hover:text-white">Log Out</button>
                     </div> :
